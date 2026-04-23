@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "LRS Lesotho",
+    "slug": "lrs-lesotho",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "ls.university.lrs"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2be7b2e5-eb08-4beb-a569-03c9dd5f399a"
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+
+    function hasRole(role) {
+      return isSignedIn() && getUserData(request.auth.uid).role == role;
+    }
+
+    // --- Entity Validations ---
+
+    function isValidUser(data) {
+      return data.userId == request.auth.uid
+        && data.email is string && data.email.size() <= 100
+        && data.role in ['student', 'lecturer', 'prl', 'pl', 'admin']
+        && (!('faculty' in data) || (data.faculty is string && data.faculty.size() <= 100));
+    }
+
+    function isValidLecture(data) {
+      return data.lecturerId == request.auth.uid
+        && data.courseCode is string && data.courseCode.size() <= 20
+        && data.status in ['scheduled', 'in-progress', 'completed', 'missed']
+        && data.studentsPresent is int && data.studentsPresent >= 0
+        && data.totalRegistered is int && data.totalRegistered >= 0
+        && (!('topic' in data) || (data.topic is string && data.topic.size() <= 1000));
+    }
+
+    function isValidInteraction(data) {
+      return data.userId == request.auth.uid
+        && data.lectureId is string && data.lectureId.size() <= 128
+        && data.type in ['student_rating', 'prl_feedback', 'attendance_mark']
+        && (!('score' in data) || (data.score is int && data.score >= 1 && data.score <= 5));
+    }
+
+    // --- Matches ---
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isOwner(userId) || hasRole('admin');
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) 
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'faculty', 'registeredCourses']);
+    }
+
+    match /lectures/{lectureId} {
+      allow get: if isSignedIn();
+      // Enforce secure queries
+      allow list: if isSignedIn() && (
+        resource.data.lecturerId == request.auth.uid || 
+        hasRole('prl') || hasRole('pl') || hasRole('admin') ||
+        hasRole('student') // Students can see lectures to mark attendance
+      );
+      allow create: if (hasRole('lecturer') || hasRole('admin')) && isValidId(lectureId) && isValidLecture(incoming());
+      allow update: if (hasRole('lecturer') || hasRole('prl') || hasRole('pl') || hasRole('admin')) 
+        && isValidId(lectureId)
+        && (isOwner(existing().lecturerId) || hasRole('admin') || hasRole('prl'))
+        && isValidLecture(incoming());
+    }
+
+    match /interactions/{interactionId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || hasRole('admin') || hasRole('prl'));
+      allow create: if isSignedIn() && isValidId(interactionId) && isValidInteraction(incoming());
+    }
+  }
+}

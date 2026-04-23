@@ -1,0 +1,88 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account details including role and institutional affiliation.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "lecturer", "prl", "pl", "admin"] },
+        "faculty": { "type": "string" },
+        "registeredCourses": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "email", "role"]
+    },
+    "Course": {
+      "title": "Course Information",
+      "description": "Definition of an academic course and its management assignments.",
+      "type": "object",
+      "properties": {
+        "courseCode": { "type": "string" },
+        "name": { "type": "string" },
+        "faculty": { "type": "string" },
+        "lecturerId": { "type": "string" },
+        "prlId": { "type": "string" },
+        "plId": { "type": "string" },
+        "studentIds": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["courseCode", "name", "faculty"]
+    },
+    "Lecture": {
+      "title": "Lecture Session",
+      "description": "Details of a specific lecture session and its reporting data.",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "lecturerId": { "type": "string" },
+        "venue": { "type": "string" },
+        "scheduledTime": { "type": "string" },
+        "week": { "type": "integer" },
+        "date": { "type": "string", "format": "date" },
+        "studentsPresent": { "type": "integer" },
+        "totalRegistered": { "type": "integer" },
+        "topic": { "type": "string" },
+        "outcomes": { "type": "string" },
+        "recommendations": { "type": "string" },
+        "status": { "type": "string", "enum": ["scheduled", "in-progress", "completed", "missed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["courseId", "lecturerId", "date", "status"]
+    },
+    "Interaction": {
+      "title": "Interaction/Feedback",
+      "description": "Student ratings or PRL feedback on a lecture.",
+      "type": "object",
+      "properties": {
+        "lectureId": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["student_rating", "prl_feedback", "attendance_mark"] },
+        "content": { "type": "string" },
+        "score": { "type": "integer" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["lectureId", "userId", "type"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Course definitions"
+    },
+    "/lectures/{lectureId}": {
+      "schema": "Lecture",
+      "description": "Individual lecture sessions"
+    },
+    "/interactions/{interactionId}": {
+      "schema": "Interaction",
+      "description": "Ratings, feedback, and attendance logs"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-h1: "Public Sans", sans-serif;
+  --font-h2: "Public Sans", sans-serif;
+  --font-body-lg: "Public Sans", sans-serif;
+  --font-body-sm: "Public Sans", sans-serif;
+  --font-label-caps: "Public Sans", sans-serif;
+
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #393939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #c4c7c7;
+  --color-inverse-surface: #e5e2e1;
+  --color-inverse-on-surface: #313030;
+  --color-outline: #8e9192;
+  --color-outline-variant: #444748;
+  --color-primary: #c8c6c5;
+  --color-on-primary: #303030;
+  --color-primary-container: #1e1e1e;
+  --color-on-primary-container: #878585;
+  --color-secondary: #78dc77;
+  --color-on-secondary: #00390a;
+  --color-success: #4CAF50;
+  --color-on-success: #FFFFFF;
+  --color-error: #F44336;
+  --color-on-error: #FFFFFF;
+  --color-background: #121212;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans;
+  }
+}
+
+.basotho-pattern {
+  background-image: linear-gradient(30deg, #1e1e1e 12%, transparent 12.5%, transparent 87%, #1e1e1e 87.5%, #1e1e1e),
+  linear-gradient(150deg, #1e1e1e 12%, transparent 12.5%, transparent 87%, #1e1e1e 87.5%, #1e1e1e),
+  linear-gradient(30deg, #1e1e1e 12%, transparent 12.5%, transparent 87%, #1e1e1e 87.5%, #1e1e1e),
+  linear-gradient(150deg, #1e1e1e 12%, transparent 12.5%, transparent 87%, #1e1e1e 87.5%, #1e1e1e),
+  linear-gradient(60deg, #222222 25%, transparent 25.5%, transparent 75%, #222222 75.5%, #222222),
+  linear-gradient(60deg, #222222 25%, transparent 25.5%, transparent 75%, #222222 75.5%, #222222);
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  opacity: 0.05;
+}
+
+.mokorotlo-pattern {
+  background-image: radial-gradient(circle at 2px 2px, #333333 1px, transparent 0);
+  background-size: 24px 24px;
+  opacity: 0.1;
+}
+
