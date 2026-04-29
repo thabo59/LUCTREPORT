@@ -52,7 +52,7 @@ export default function AuthScreen() {
       <Text style={styles.brand}>{ASSIGNMENT_INFO.projectTitle}</Text>
       <Text style={styles.subtitle}>{ASSIGNMENT_INFO.subtitle}</Text>
       <Card title={isRegister ? "Register" : "Login"}>
-        {isRegister ? <AppInput label="Full Name" value={name} onChangeText={setName} placeholder="John Doe" /> : null}
+        {isRegister ? <AppInput label="Full Name" value={name} onChangeText={setName} placeholder="Thabo Monamane" /> : null}
         <AppInput label="Email" value={email} onChangeText={setEmail} placeholder="name@luct.ls" autoCapitalize="none" />
         <AppInput label="Password" value={password} onChangeText={setPassword} placeholder="********" secureTextEntry />
         {isRegister ? (
